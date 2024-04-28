@@ -2,14 +2,16 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
-public class ChanceScoreStrategy implements ScoreStrategy {
+public class YatzyScoreStrategyImpl implements ScoreStrategy {
   @Override
   public int calculateScore(int... dice) {
     this.validateDice(dice);
-    int score = 0;
+    int firstDie = dice[0];
     for (int die : dice) {
-      score += die;
+      if (die != firstDie) {
+        return 0;
+      }
     }
-    return score;
+    return 50;
   }
 }

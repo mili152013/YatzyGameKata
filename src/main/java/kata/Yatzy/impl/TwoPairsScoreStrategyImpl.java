@@ -4,7 +4,7 @@ import kata.Yatzy.ScoreStrategy;
 
 import java.util.Arrays;
 
-public class TwoPairsScoreStrategy implements ScoreStrategy {
+public class TwoPairsScoreStrategyImpl implements ScoreStrategy {
   @Override
   public int calculateScore(int... dice) {
     this.validateDice(dice);

@@ -7,27 +7,27 @@ public class Yatzy {
   private static final ScoreStrategyFactory scoreStrategyFactory = new ScoreStrategyFactory();
 
   public static int scoreOnes(int... dice) {
-    return scoreSingleNumber(1, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.ONES).calculateScore(dice);
   }
 
   public static int scoreTwos(int... dice) {
-    return scoreSingleNumber(2, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.TWOS).calculateScore(dice);
   }
 
   public static int scoreThrees(int... dice) {
-    return scoreSingleNumber(3, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.THREES).calculateScore(dice);
   }
 
   public static int scoreFours(int... dice) {
-    return scoreSingleNumber(4, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.FOURS).calculateScore(dice);
   }
 
   public static int scoreFives(int... dice) {
-    return scoreSingleNumber(5, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.FIVES).calculateScore(dice);
   }
 
   public static int scoreSixes(int... dice) {
-    return scoreSingleNumber(6, dice);
+    return scoreStrategyFactory.getScoreStrategy(ScoreCategory.SIXES).calculateScore(dice);
   }
 
   public static int scorePair(int... dice) {
@@ -66,18 +66,4 @@ public class Yatzy {
     return scoreStrategyFactory.getScoreStrategy(ScoreCategory.FOUR_OF_A_KIND).calculateScore(dice);
   }
 
-  private static int scoreSingleNumber(int number, int[] dice) {
-    for (int die : dice) {
-      if (die < 1 || die > 6) {
-        throw new IllegalArgumentException("Dice value must be between 1 and 6");
-      }
-    }
-    int sum = 0;
-    for (int die : dice) {
-      if (die == number) {
-        sum += die;
-      }
-    }
-    return sum;
-  }
 }

@@ -2,7 +2,7 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
-public class FullHouseScoreStrategy implements ScoreStrategy {
+public class FullHouseScoreStrategyImpl implements ScoreStrategy {
   @Override
   public int calculateScore(int... dice) {
     this.validateDice(dice);
