@@ -1,42 +1,89 @@
 import kata.Yatzy.Yatzy;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class NumberCategoryTests {
-  @Test
-  void scoreOnes() {
-    assertEquals(2, Yatzy.scoreOnes(1, 1, 2, 3, 4));
-    assertEquals(0, Yatzy.scoreOnes(2, 2, 2, 2, 2));
+
+  static Stream<Object[]> scoreOnesProvider() {
+    return Stream.of(
+        new Object[] { List.of(1, 1, 2, 3, 4), 2 },
+        new Object[] { List.of(2, 2, 2, 2, 2), 0 }
+    );
   }
 
-  @Test
-  void scoreTwos() {
-    assertEquals(4, Yatzy.scoreTwos(1, 2, 3, 2, 4));
-    assertEquals(0, Yatzy.scoreTwos(1, 1, 1, 1, 1));
+  static Stream<Object[]> scoreTwosProvider() {
+    return Stream.of(
+        new Object[] { List.of(1, 2, 3, 2, 4), 4 },
+        new Object[] { List.of(1, 1, 1, 1, 1), 0 }
+    );
   }
 
-  @Test
-  void scoreThrees() {
-    assertEquals(9, Yatzy.scoreThrees(3, 3, 3, 4, 5));
-    assertEquals(0, Yatzy.scoreThrees(2, 2, 2, 2, 2));
+  static Stream<Object[]> scoreThreesProvider() {
+    return Stream.of(
+        new Object[] { List.of(3, 3, 3, 4, 5), 9 },
+        new Object[] { List.of(2, 2, 2, 2, 2), 0 }
+    );
   }
 
-  @Test
-  void scoreFours() {
-    assertEquals(8, Yatzy.scoreFours(4, 4, 2, 3, 1));
-    assertEquals(0, Yatzy.scoreFours(2, 2, 2, 2, 2));
+  static Stream<Object[]> scoreFoursProvider() {
+    return Stream.of(
+        new Object[] { List.of(4, 4, 2, 3, 1), 8 },
+        new Object[] { List.of(2, 2, 2, 2, 2), 0 }
+    );
   }
 
-  @Test
-  void scoreFives() {
-    assertEquals(15, Yatzy.scoreFives(5, 5, 5, 2, 3));
-    assertEquals(0, Yatzy.scoreFives(1, 1, 1, 1, 1));
+  static Stream<Object[]> scoreFivesProvider() {
+    return Stream.of(
+        new Object[] { List.of(5, 5, 5, 2, 3), 15 },
+        new Object[] { List.of(1, 1, 1, 1, 1), 0 }
+    );
   }
 
-  @Test
-  void scoreSixes() {
-    assertEquals(12, Yatzy.scoreSixes(6, 2, 6, 4, 5));
-    assertEquals(0, Yatzy.scoreSixes(1, 1, 1, 1, 1));
+  static Stream<Object[]> scoreSixesProvider() {
+    return Stream.of(
+        new Object[] { List.of(6, 2, 6, 4, 5), 12 },
+        new Object[] { List.of(1, 1, 1, 1, 1), 0 }
+    );
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreOnesProvider")
+  void scoreOnes(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreOnes(dice));
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreTwosProvider")
+  void scoreTwos(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreTwos(dice));
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreThreesProvider")
+  void scoreThrees(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreThrees(dice));
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreFoursProvider")
+  void scoreFours(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreFours(dice));
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreFivesProvider")
+  void scoreFives(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreFives(dice));
+  }
+
+  @ParameterizedTest
+  @MethodSource("scoreSixesProvider")
+  void scoreSixes(List<Integer> dice, int expected) {
+    assertEquals(expected, Yatzy.scoreSixes(dice));
   }
 }

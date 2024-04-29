@@ -2,20 +2,22 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public class ThreeOfAKindScoreStrategyImpl implements ScoreStrategy {
   @Override
-  public int calculateScore(int... dice) {
+  public int calculateScore(List<Integer> dice) {
     this.validateDice(dice);
-    int[] counts = new int[7];
-    for (int die : dice) {
-      counts[die]++;
-    }
+    Map<Integer, Long> frequencyMap = dice.stream()
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-    for (int i = 1; i < counts.length; i++) {
-      if (counts[i] >= 3) {
-        return i * 3;
-      }
-    }
-    return 0;
+    return frequencyMap.entrySet().stream()
+        .filter(entry -> entry.getValue() >= 3)
+        .mapToInt(entry -> entry.getKey() * 3)
+        .findFirst()
+        .orElse(0);
   }
 }

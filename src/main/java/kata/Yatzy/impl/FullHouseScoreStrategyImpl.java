@@ -2,33 +2,35 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 public class FullHouseScoreStrategyImpl implements ScoreStrategy {
   @Override
-  public int calculateScore(int... dice) {
+  public int calculateScore(List<Integer> dice) {
     this.validateDice(dice);
-    int[] counts = new int[7];
-    for (int die : dice) {
-      counts[die]++;
-    }
+    Map<Integer, Long> frequencyMap = dice.stream()
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
+    int score = 0;
     boolean hasThreeOfAKind = false;
     boolean hasPair = false;
-    int score = 0;
 
-    for (int i = 1; i < counts.length; i++) {
-      if (counts[i] == 3) {
+    for (Map.Entry<Integer, Long> entry : frequencyMap.entrySet()) {
+      int face = entry.getKey();
+      long count = entry.getValue();
+      if (count == 3) {
         hasThreeOfAKind = true;
-        score += i * 3;
+        score += face * 3;
       }
-      else if (counts[i] == 2) {
+      else if (count == 2) {
         hasPair = true;
-        score += i * 2;
+        score += face * 2;
       }
     }
 
-    if (hasThreeOfAKind && hasPair) {
-      return score;
-    }
-    return 0;
+    return (hasThreeOfAKind && hasPair) ? score : 0;
   }
 }

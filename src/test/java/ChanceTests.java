@@ -1,31 +1,37 @@
 import kata.Yatzy.Yatzy;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ChanceTests {
-  @Test
-  void scoreSumOfAllDice() {
-    for (int i = 0; i < 10; i++) {
-      int[] dice = generateRandomDice();
+
+  private static Stream<Object[]> diceProvider() {
+    return Stream.generate(() -> {
+      List<Integer> dice = generateRandomDice();
       int expectedScore = calculateExpectedScore(dice);
-      assertEquals(expectedScore, Yatzy.scoreChance(dice));
-    }
+      return new Object[] { dice, expectedScore };
+    }).limit(10);
   }
 
-  private int[] generateRandomDice() {
-    int[] dice = new int[5];
-    for (int i = 0; i < 5; i++) {
-      dice[i] = (int)(Math.random() * 6) + 1;
-    }
-    return dice;
+  private static List<Integer> generateRandomDice() {
+    return IntStream.range(0, 5)
+        .mapToObj(i -> (int)(Math.random() * 6) + 1)
+        .collect(Collectors.toList());
   }
 
-  private int calculateExpectedScore(int[] dice) {
-    int sum = 0;
-    for (int die : dice) {
-      sum += die;
-    }
-    return sum;
+  private static int calculateExpectedScore(List<Integer> dice) {
+    return dice.stream().mapToInt(Integer::intValue).sum();
+  }
+
+  @ParameterizedTest
+  @MethodSource("diceProvider")
+  void scoreSumOfAllDice(List<Integer> dice, int expectedScore) {
+    assertEquals(expectedScore, Yatzy.scoreChance(dice));
   }
 }

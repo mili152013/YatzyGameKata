@@ -2,20 +2,24 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
-public class FourOfAKindScoreStrategyImpl implements ScoreStrategy {
-  @Override
-  public int calculateScore(int... dice) {
-    this.validateDice(dice);
-    int[] counts = new int[7];
-    for (int die : dice) {
-      counts[die]++;
-    }
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-    for (int i = 1; i < counts.length; i++) {
-      if (counts[i] >= 4) {
-        return i * 4;
-      }
-    }
-    return 0;
+public class FourOfAKindScoreStrategyImpl implements ScoreStrategy {
+
+  @Override
+  public int calculateScore(List<Integer> dice) {
+    validateDice(dice);
+
+    Map<Integer, Long> frequencyMap = dice.stream()
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+
+    return frequencyMap.entrySet().stream()
+        .filter(entry -> entry.getValue() >= 4)
+        .mapToInt(entry -> entry.getKey() * 4)
+        .findFirst()
+        .orElse(0);
   }
 }

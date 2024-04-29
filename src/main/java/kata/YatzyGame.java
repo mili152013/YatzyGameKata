@@ -4,6 +4,8 @@ import kata.Yatzy.ScoreStrategy;
 import kata.Yatzy.ScoreStrategyFactory;
 import kata.Yatzy.enumerations.ScoreCategory;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class YatzyGame {
@@ -14,10 +16,10 @@ public class YatzyGame {
   }
 
   public static void main(String[] args) {
-    new YatzyGame().playGame();
+    new YatzyGame().playGame(args);
   }
 
-  public void playGame() {
+  public void playGame(String[] args) {
     Scanner scanner = new Scanner(System.in);
 
     while (true) {
@@ -28,9 +30,10 @@ public class YatzyGame {
       }
 
       System.out.print("Enter your choice (or 'quit' to exit): ");
-      String choice = scanner.nextLine();
+      String choice = scanner.nextLine().trim();
 
       if (choice.equalsIgnoreCase("quit")) {
+        System.out.println("Thank you for playing Yatzy!");
         break;
       }
 
@@ -40,9 +43,9 @@ public class YatzyGame {
         continue;
       }
 
-      int[] dice = new int[5];
+      List<Integer> dice = new ArrayList<>();
       for (int i = 0; i < 5; i++) {
-        dice[i] = getValidDiceValue(scanner, i + 1);
+        dice.add(getValidDiceValue(scanner, i + 1));
       }
 
       ScoreStrategy strategy = factory.getScoreStrategy(selectedCategory);
@@ -58,22 +61,28 @@ public class YatzyGame {
   private int getValidDiceValue(Scanner scanner, int index) {
     while (true) {
       System.out.print("Enter value for dice " + index + " (between 1 and 6): ");
-      int value = scanner.nextInt();
-      if (value >= 1 && value <= 6) {
-        return value;
+      String input = scanner.nextLine().trim();
+      try {
+        int value = Integer.parseInt(input);
+        if (value >= 1 && value <= 6) {
+          return value;
+        }
+        else {
+          System.out.println("Invalid value. Please enter a value between 1 and 6.");
+        }
       }
-      else {
-        System.out.println("Invalid value. Please enter a value between 1 and 6.");
+      catch (NumberFormatException e) {
+        System.out.println("Invalid input. Please enter a numerical value.");
       }
     }
   }
 
   private ScoreCategory getCategory(String input) {
-    for (ScoreCategory category : ScoreCategory.values()) {
-      if (category.name().equalsIgnoreCase(input)) {
-        return category;
-      }
+    try {
+      return ScoreCategory.valueOf(input.toUpperCase());
     }
-    return null;
+    catch (IllegalArgumentException e) {
+      return null;
+    }
   }
 }

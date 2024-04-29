@@ -2,14 +2,14 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
+import java.util.List;
+
 public class ChanceScoreStrategyImpl implements ScoreStrategy {
   @Override
-  public int calculateScore(int... dice) {
+  public int calculateScore(List<Integer> dice) {
     this.validateDice(dice);
-    int score = 0;
-    for (int die : dice) {
-      score += die;
-    }
-    return score;
+    return dice.stream()
+        .mapToInt(Integer::intValue)
+        .sum();
   }
 }

@@ -2,26 +2,27 @@ package kata.Yatzy.impl;
 
 import kata.Yatzy.ScoreStrategy;
 
-import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TwoPairsScoreStrategyImpl implements ScoreStrategy {
   @Override
-  public int calculateScore(int... dice) {
+  public int calculateScore(List<Integer> dice) {
     this.validateDice(dice);
-    Arrays.sort(dice);
-    int score = 0;
-    int pairCount = 0;
+    Map<Integer, Long> frequencyMap = dice.stream()
+        .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
 
-    for (int i = dice.length - 1; i > 0; i--) {
-      if (dice[i] == dice[i - 1]) {
-        score += dice[i] * 2;
-        pairCount++;
-        i--;
+    List<Integer> scores = frequencyMap.entrySet().stream()
+        .filter(entry -> entry.getValue() >= 2)
+        .map(entry -> entry.getKey() * 2)
+        .sorted(Comparator.reverseOrder())
+        .toList();
 
-        if (pairCount == 2) {
-          return score;
-        }
-      }
+    if (scores.size() >= 2) {
+      return scores.get(0) + scores.get(1);
     }
     return 0;
   }
